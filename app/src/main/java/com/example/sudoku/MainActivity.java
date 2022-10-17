@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TableLayout tablita= findViewById(R.id.table);
-        CharSequence[] nombres = {"0","1","2","3","4","5","6","7","8","9"};
+        CharSequence[] nombres = {"♠","1","2","3","4","5","6","7","8","9"};
 
         for(int i=0;i<9;i++){
             TableRow rowy=new TableRow(this);
