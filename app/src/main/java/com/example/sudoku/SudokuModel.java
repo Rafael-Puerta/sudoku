@@ -8,12 +8,16 @@ public class SudokuModel {
     private int getVal(int fila,int columna){
         return matriu[fila][columna];
     };
-    private int setVal(int valor,int fila,int columna){
+    private boolean setVal(int valor,int fila,int columna){
+        int tempo=matriu[fila][columna];
         if(valor<0||valor>9){
+
             this.matriu[fila][columna]=valor;
-            return matriu[fila][columna];
+            if(comprovaCol(columna) && comprovaFila(fila)){
+            return true;}
         }
-        return matriu[fila][columna];
+        this.matriu[fila][columna]=tempo;
+        return false;
     }
     private boolean comprovaFila(int fila){
         int[] temp=new int[9];
@@ -56,12 +60,8 @@ public class SudokuModel {
             int v=(int) (Math.random()*9);
             if(getVal(i,j)==0 && v>0){
 
-                setVal(v,i,j);
-                if(comprovaFila(i) && comprovaCol(j)){
+                if(setVal(v,i,j)){
                     contador++;
-                }
-                else{
-                    setVal(0,i,j);
                 }
         }
                 if(contador==20){
