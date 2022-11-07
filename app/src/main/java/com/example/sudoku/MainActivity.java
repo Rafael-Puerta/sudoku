@@ -12,13 +12,15 @@ import android.widget.TableRow;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
+    private SudokuModel model=new SudokuModel();
+    private Spinner[][] matriu=new Spinner[9][9];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TableLayout tablita= findViewById(R.id.table);
-        CharSequence[] nombres = {"♠","1","2","3","4","5","6","7","8","9"};
+        CharSequence[] nombres = {"0","1","2","3","4","5","6","7","8","9"};
+
 
         for(int i=0;i<9;i++){
             TableRow rowy=new TableRow(this);
@@ -30,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
                 sp.setTag(R.id.col,j);
                 sp.setTag(R.id.fila,i);
                 sp.setTag("bug init");
-
                 sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int k, long l) {
@@ -42,11 +43,20 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
                         Toast.makeText(MainActivity.this, "fila: "+fila+" columna: "+col+" nuevo valor: "+k, Toast.LENGTH_SHORT).show();
+                        //sp..setSelection(getIndex(spinner, myString));
+                        //spinner.getItemAtPosition(i)
+                        if(model.setVal(k,fila,col)){
+                            refrescaGUI();
+                        }
+                        else{
+                            matriu[fila][col].setSelection(0);
+                        }
 
                     }
                     public void onNothingSelected(AdapterView<?> parent) {
                         // Another interface callback
                     }
+
                 });
 
 
@@ -54,13 +64,25 @@ public class MainActivity extends AppCompatActivity {
                         android.R.layout.simple_spinner_item, nombres);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp.setAdapter(adapter);
-                rowy.addView(sp);
+                this.matriu[i][j]=sp;
+                rowy.addView(this.matriu[i][j]);
+
 
             }
             tablita.addView(rowy);
 
         }
+        refrescaGUI();
 
+    }
+
+    private void refrescaGUI(){
+        for(int i=0;i<9;i++) {
+
+            for (int j = 0; j < 9; j++) {
+                matriu[i][j].setSelection(model.getVal(i,j));
+            }
+        }
     }
 
 }
