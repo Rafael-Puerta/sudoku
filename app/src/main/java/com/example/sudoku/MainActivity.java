@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "fila: "+fila+" columna: "+col+" nuevo valor: "+k, Toast.LENGTH_SHORT).show();
                         //sp..setSelection(getIndex(spinner, myString));
                         //spinner.getItemAtPosition(i)
-                        if(model.setVal(k,fila,col)){
+                        if(model.setVal(k,fila,col)>-1){
                             refrescaGUI();
                         }
                         else{

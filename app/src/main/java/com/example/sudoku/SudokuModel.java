@@ -1,73 +1,104 @@
 package com.example.sudoku;
 
+import android.util.Log;
+
 import java.util.Arrays;
+import java.util.Random;
 
 public class SudokuModel {
-    private static int[][] matriu=new int[9][9];
+    private static int[][] matriuI=new int[9][9];
 
     public int getVal(int fila,int columna){
-        return matriu[fila][columna];
+        return matriuI[fila][columna];
     };
-    public boolean setVal(int valor,int fila,int columna){
-        int tempo=matriu[fila][columna];
-        if(valor>0||valor<10){
-
-
-            if(comprovaCol(columna) && comprovaFila(fila)){
-                this.matriu[fila][columna]=valor;
-            return true;}
-        }
-        this.matriu[fila][columna]=tempo;
-        return false;
+    public int setVal(int valor,int fila,int columna){
+        int previousVal = matriuI[fila][columna];
+        matriuI[fila][columna] = valor;
+        if (!comprovaFila(fila)){matriuI[fila][columna] = previousVal; return -1;};
+        if (!comprovaCol(columna)){matriuI[fila][columna] = previousVal; return -1;};
+        if (!comprovaQuad(fila,columna)){matriuI[fila][columna] = previousVal; return -1;};
+        return 0;
     }
     public boolean comprovaFila(int fila){
-        int[] temp=new int[9];
-        for(int i=0;i<9;i++){
-            if(Arrays.asList(temp).contains(matriu[fila][i]) && matriu[fila][i]!=0 ){
-                return false;
+        Boolean valid = true;
+        for (int a = 0; a<9; a++){
+            for (int b = 0; b<9; b++){
+                if (a != b && matriuI[fila][a] != 0){
+                    if (matriuI[fila][a] == matriuI[fila][b]){return false; }
+                }
             }
-
-            temp[i]=(matriu[fila][i]);
-
         }
-        return true;
+
+        return valid;
     }
     public boolean comprovaCol(int columna){
-
-        int[] temp=new int[9];
-        for(int i=0;i<9;i++){
-            if(Arrays.asList(temp).contains(matriu[i][columna]) && matriu[i][columna]!=0 ){
-                return false;
+        boolean valid = true;
+        for (int a = 0; a < 9; a++){
+            for (int b = 0; b < 9; b++){
+                if (a != b && matriuI[b][columna] != 0){
+                    if (matriuI[a][columna] == matriuI[b][columna]){return false;}
+                }
             }
-
-            temp[i]=(matriu[i][columna]);
-
         }
-        return true;
+
+        return valid;
     }
     public boolean comprovaQuad(int columna,int fila){
-        if(comprovaCol(columna) && comprovaFila(fila)){
-
-            return true;
+        boolean valid = true;
+        int minfila = 0;
+        int mincolumna = 0;
+        //Determina la cantonada superior esquerra del quadrant
+        if (fila < 3){
+            minfila = 0;
+            if (columna<3) {mincolumna = 0;}
+            else if (columna < 6){mincolumna = 3;}
+            else {mincolumna = 6;}
+        }else if (fila < 6) {
+            minfila = 3;
+            if (columna<3) {mincolumna = 0;}
+            else if (columna < 6){mincolumna = 3;}
+            else {mincolumna = 6;}
+        } else {
+            minfila = 6;
+            if (columna<3) {mincolumna = 0;}
+            else if (columna < 6){mincolumna = 3;}
+            else {mincolumna = 6;}
         }
-        return false;
+        //Comprova els valors del quadrant
+        for (int a = minfila; a < minfila+3 ; a++){
+            for (int b = mincolumna; b < mincolumna + 3; b++) {
+                for (int a1 = minfila; a1 < minfila + 3; a1++) {
+                    for (int b1 = mincolumna; b1 < mincolumna + 3; b1++) {
+                        if (a != a1 && b != b1 && matriuI[a][b] != 0) {
+                            if (matriuI[a][b] == matriuI[a1][b1]) {
+                                Log.i("Quad", "NO");
+                                valid = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Log.i("Quad", "YES");
+        return valid;
     }
     public void creaPartida(){
-        boolean bucle=true;
-        int contador=0;
-        while(bucle){
-            int i= (int) (Math.random()*9);
-            int j = (int) (Math.random()*9);
-            int v=(int) (Math.random()*9);
-            if(getVal(i,j)==0 && v>0){
-
-                if(setVal(v,i,j)){
-                    contador++;
-                }
-        }
-                if(contador==20){
-                    bucle=false;
-                }
+        Random rng = new Random();
+        int numsIntroduits = rng.nextInt(100-1);
+        Log.i("Inputs",String.valueOf(numsIntroduits));
+        int row = 0;
+        int col = 0;
+        int val = 0;
+        for (int a = 0; a < numsIntroduits; a++){
+            row = rng.nextInt(9-1);
+            col = rng.nextInt(9-1);
+            val = rng.nextInt(9-1)+1;
+            setVal(row,col,val);
+            while (setVal(row,col,val) == -1){
+                Log.i("INFO","Regenerant nombre");
+                row = rng.nextInt(9-1);
+                col = rng.nextInt(9-1);
+            }
         }
     }
 
