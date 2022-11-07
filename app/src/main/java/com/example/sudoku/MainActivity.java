@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                             sp.setTag("guay");
                             return;
                         }
+
                         Toast.makeText(MainActivity.this, "fila: "+fila+" columna: "+col+" nuevo valor: "+k, Toast.LENGTH_SHORT).show();
                         //sp..setSelection(getIndex(spinner, myString));
                         //spinner.getItemAtPosition(i)

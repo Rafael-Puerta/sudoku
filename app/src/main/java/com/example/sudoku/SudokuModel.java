@@ -82,6 +82,7 @@ public class SudokuModel {
         Log.i("Quad", "YES");
         return valid;
     }
+
     public void creaPartida(){
         Random rng = new Random();
         int numsIntroduits = rng.nextInt(100-1);
